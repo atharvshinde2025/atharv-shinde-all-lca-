@@ -1,0 +1,85 @@
+#include <stdio.h>
+
+// Permissible operating limits
+#define MAX_VF 3.5     // Maximum Forward Voltage (V)
+#define MAX_IR 50.0    // Maximum Reverse Leakage Current (uA)
+#define MAX_VR 100.0   // Maximum Rated Voltage (V)
+
+// Structure definition
+struct Device {
+    int id;
+    char type[20];
+    float vf;
+    float ir;
+    float vr;
+    int status; // 1 = Within Specification, 0 = Out of Specification
+};
+
+int main() {
+    struct Device d[100];
+    int n, i, outCount = 0;
+
+    printf("Permissible Operating Limits:\n");
+    printf("Max Vf: %.2f V | Max Ir: %.2f uA | Max Vr: %.2f V\n\n", MAX_VF, MAX_IR, MAX_VR);
+
+    printf("Enter the number of semiconductor devices: ");
+    scanf("%d", &n);
+
+    // Accept device details and evaluate operating limits
+    for (i = 0; i < n; i++) {
+        printf("\n--- Enter Details for Device %d ---\n", i + 1);
+        printf("Device ID: ");
+        scanf("%d", &d[i].id);
+
+        printf("Device Type (Diode/BJT/MOSFET/LED): ");
+        scanf("%s", d[i].type);
+
+        printf("Forward Voltage Vf (in V): ");
+        scanf("%f", &d[i].vf);
+
+        printf("Reverse Leakage Current Ir (in uA): ");
+        scanf("%f", &d[i].ir);
+
+        printf("Rated Voltage Vr (in V): ");
+        scanf("%f", &d[i].vr);
+
+        if (d[i].vf <= MAX_VF && d[i].ir <= MAX_IR && d[i].vr <= MAX_VR) {
+            d[i].status = 1; // Within Specification
+        } else {
+            d[i].status = 0; // Out of Specification
+            outCount++;
+        }
+    }
+
+    // Display summary table of all devices
+    printf("\n--------------------------------------------------------------------------------\n");
+    printf("%-10s %-12s %-10s %-12s %-12s %-20s\n",
+           "Dev ID", "Type", "Vf (V)", "Ir (uA)", "Vr (V)", "Status");
+    printf("--------------------------------------------------------------------------------\n");
+
+    for (i = 0; i < n; i++) {
+        printf("%-10d %-12s %-10.2f %-12.2f %-12.2f %-20s\n",
+               d[i].id,
+               d[i].type,
+               d[i].vf,
+               d[i].ir,
+               d[i].vr,
+               (d[i].status == 1) ? "Within Spec" : "Out of Spec");
+    }
+    printf("--------------------------------------------------------------------------------\n");
+
+    // Identify and display Out of Specification devices
+    printf("\n=== Devices Exceeding Specified Limits (Out of Specification) ===\n");
+    if (outCount == 0) {
+        printf("All devices are within permissible operating limits.\n");
+    } else {
+        for (i = 0; i < n; i++) {
+            if (d[i].status == 0) {
+                printf("-> Device ID: %d (%s) | Measured: Vf = %.2f V, Ir = %.2f uA, Vr = %.2f V\n",
+                       d[i].id, d[i].type, d[i].vf, d[i].ir, d[i].vr);
+            }
+        }
+    }
+
+    return 0;
+}
