@@ -1,0 +1,53 @@
+#include <stdio.h>
+
+int main() {
+    int year, month, day, dayCode, space;
+    int d1, d2, d3;
+
+    int daysInMonth[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    char *months[] = {
+        " ",
+        "January", "February", "March", "April",
+        "May", "June", "July", "August",
+        "September", "October", "November", "December"
+    };
+
+    printf("Enter the year: ");
+    scanf("%d", &year);
+
+    // Check for leap year
+    if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) {
+        daysInMonth[2] = 29;
+    }
+
+    // Calculate first day of the year (0 = Sun, 1 = Mon, ..., 6 = Sat)
+    d1 = (year - 1) / 4;
+    d2 = (year - 1) / 100;
+    d3 = (year - 1) / 400;
+    dayCode = (year + d1 - d2 + d3) % 7;
+
+    // Loop through all 12 months
+    for (month = 1; month <= 12; month++) {
+        printf("\n\n--------------- %s %d ---------------\n", months[month], year);
+        printf("  Sun  Mon  Tue  Wed  Thu  Fri  Sat\n");
+
+        // Print blank spaces before the 1st day
+        for (space = 0; space < dayCode; space++) {
+            printf("     ");
+        }
+
+        // Print all days of the current month
+        for (day = 1; day <= daysInMonth[month]; day++) {
+            printf("%5d", day);
+            dayCode++;
+
+            if (dayCode > 6) {
+                printf("\n");
+                dayCode = 0;
+            }
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
