@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <string.h>
+
+struct Device {
+    int id;
+    char type[10];
+    float vf;
+    float ir;
+    float vr;
+    char status[6];
+};
+
+int main() {
+    struct Device d[100];
+    int n, i, flag;
+
+    printf("Enter total number of devices: ");
+    scanf("%d", &n);
+
+    for(i = 0; i < n; i++) {
+        printf("\nDevice %d details:\n", i + 1);
+        printf("ID: ");
+        scanf("%d", &d[i].id);
+        printf("Type: ");
+        scanf("%s", d[i].type);
+        printf("Vf: ");
+        scanf("%f", &d[i].vf);
+        printf("Ir: ");
+        scanf("%f", &d[i].ir);
+        printf("Vr: ");
+        scanf("%f", &d[i].vr);
+
+        flag = 0;
+        if(d[i].vf > 3.5) {
+            flag = 1;
+        }
+        if(d[i].ir > 50.0) {
+            flag = 1;
+        }
+        if(d[i].vr < 20.0) {
+            flag = 1;
+        }
+
+        if(flag == 0) {
+            strcpy(d[i].status, "Pass");
+        } else {
+            strcpy(d[i].status, "Fail");
+        }
+    }
+
+    printf("\nID\tType\tVf\tIr\tVr\tStatus\n");
+    for(i = 0; i < n; i++) {
+        printf("%d\t%s\t%.1f\t%.1f\t%.1f\t%s\n", d[i].id, d[i].type, d[i].vf, d[i].ir, d[i].vr, d[i].status);
+    }
+
+    printf("\nOut of Specification Devices:\n");
+    for(i = 0; i < n; i++) {
+        if(d[i].status[0] == 'F') {
+            printf("Device ID %d (%s) is out of specification\n", d[i].id, d[i].type);
+        }
+    }
+
+    return 0;
+}
